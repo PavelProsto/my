@@ -8,26 +8,26 @@ class Person:
         self.level = 1
     
     def make_kick(self, enemy):
-        enemy.health -= 20
-        if enemy.health < 0:
-            enemy.health = 0
-        self.health += 10
+        enemy.hp -= 20
+        if enemy.hp < 0:
+            enemy.hp = 0
+        self.hp += 10
         print(self.name, "бьет", enemy.name)
-        print('%s = %d' % (enemy.name, enemy.health))
+        print('%s = %d' % (enemy.name, enemy.hp))
 
 
         
 class Player(Person):
-    def __init__(self, name, hp) -> None:
-        Person.__init__(self, name, hp = 100)
+    def __init__(self, name, hp = 100) -> None:
+        Person.__init__(self, name, hp)
         
     #def up_level(self):
     #    self.level += 1
 
         
 class Monster(Person):
-    def __init__(self, name, hp) -> None:
-        Person.__init__(self, name, hp = 75)
+    def __init__(self, name, hp = 75) -> None:
+        Person.__init__(self, name, hp)
         #self.my_treasure = None
     #def follow(self, hero):
      #   self.my_hero = hero.id
@@ -39,21 +39,21 @@ class Battle:
         self.mnstr = mnstr
         self.result = "Сражения не было"
     def battle(self):
-        while self.plr.health > 0 and self.mnstr.health > 0:
+        while self.plr.hp > 0 and self.mnstr.hp > 0:
             n = randint(1, 2)
             if n == 1:
                 self.plr.make_kick(self.mnstr)
             else:
                 self.mnstr.make_kick(self.plr)
-        if self.plr.health > self.mnstr.health:
+        if self.plr.hp > self.mnstr.hp:
             self.result = self.plr.name + " ПОБЕДИЛ"
-        elif self.mnstr.health > self.plr.health:
+        elif self.mnstr.hp > self.plr.hp:
             self.result = self.mnstr.name + " ПОБЕДИЛ"
     def who_win(self):
         print(self.result)
         
         
-player_name = input('Введите имя игрока')
+player_name = input('Введите имя игрока ')
 player1 = Player(player_name)
 monster1 = Monster('Abrvalk')
 b = Battle(player1, monster1)
@@ -91,7 +91,7 @@ b.who_win()
 #
 #
 #class Soldier:
-#    def __init__(self, name='Noname', health = 100) -> None:
+#    def __init__(self, name='Noname', hp = 100) -> None:
 #        
         
     
