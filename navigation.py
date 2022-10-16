@@ -1,6 +1,7 @@
 from sys import exit
 from random import randint
 from textwrap import dedent
+import action
 
 class Scene(object):
 
@@ -42,7 +43,7 @@ class Death(Scene):
         exit(1)
 
 
-class Entrance_of_the_dungeon(Scene):
+class Entrance(Scene):
 
     def enter(self):
         print(dedent("""
@@ -57,7 +58,7 @@ class Entrance_of_the_dungeon(Scene):
             print(dedent("""
                 Вы проскальзываете в портал входа на встречу приключениям.
                 """))
-            return 'lader'
+            return 'lader_to_dungeon'
 
        # elif action == "подождать":
        #     print(dedent("""
@@ -69,18 +70,15 @@ class Entrance_of_the_dungeon(Scene):
             print("Выберите один из предложенных вариантов")
             return 'entrance'
 
-class LaserWeaponArmory(Scene):
+class Lader(Scene):
 
     def enter(self):
         print(dedent("""
-            Ты вбегаешь в оружейную лабораторию и начинаешь обыскивать 
-            комнату, спрятались ли тут другие готоны.  Стоит мертвая тишина. 
-            Ты бежишь в дальний угол комнаты и находишь нейтронную бомбу в 
-            защитном контейнере. На лицевой стороне контейнера расположена 
-            панель с кнопками и тебе надо ввести правильный код, чтобы 
-            достать бомбу. Если ты 10 раз введешь неправильный код, контейнер 
-            заблокируется и ты не сможешь достать бомбу. Учти, что код 
-            состоит из 3 цифр.
+            Перед вами 2 двери. Налево пойдёш - по щам получишь.
+            Направо вообще лучше не ходить.
+            Варианты действий:
+            пойти направо
+            пойти налево
             """))
 
         code = f"{randint(1,9)}{randint(1,9)}{randint(1,9)}"
@@ -111,7 +109,7 @@ class LaserWeaponArmory(Scene):
 
 
 
-class TheBridge(Scene):
+class Goldroom(Scene):
 
     def enter(self):
         print(dedent("""
@@ -198,65 +196,14 @@ class Exit_of_the_dungeon(Scene):
         return 'finished'
 
 
-class Person:
-    def __init__(self, name, hp) -> None:
-        self.name = name
-        self.hp = hp
-        self.level = 1
-    
-    def make_kick(self, enemy):
-        enemy.hp -= 20
-        if enemy.hp < 0:
-            enemy.hp = 0
-        self.hp += 10
-        print(self.name, "бьет", enemy.name)
-        print('%s = %d' % (enemy.name, enemy.hp))
 
-
-        
-class Player(Person):
-    def __init__(self, name = 'Igrok', hp = 100) -> None:
-        Person.__init__(self, name, hp)
-        
-    #def up_level(self):
-    #    self.level += 1
-
-        
-class Monster(Person):
-    def __init__(self, name = 'Monster', hp = 75) -> None:
-        Person.__init__(self, name, hp)
-        #self.my_treasure = None
-    #def follow(self, hero):
-     #   self.my_hero = hero.id
-
-
-class Battle:
-    def __init__(self, plr, mnstr) -> None:
-        self.plr = plr
-        self.mnstr = mnstr
-        self.result = "Сражения не было"
-    def battle(self):
-        while self.plr.hp > 0 and self.mnstr.hp > 0:
-            n = randint(1, 2)
-            if n == 1:
-                self.plr.make_kick(self.mnstr)
-            else:
-                self.mnstr.make_kick(self.plr)
-        if self.plr.hp > self.mnstr.hp:
-            self.result = self.plr.name + " ПОБЕДИЛ"
-        elif self.mnstr.hp > self.plr.hp:
-            self.result = self.mnstr.name + " ПОБЕДИЛ"
-    def who_win(self):
-        print(self.result)
-        
-        
 class Map(object):
 
     scenes = {
-        'entrance': Entrance_of_the_dungeon(),
-        'laser_weapon_armory': LaserWeaponArmory(),
-        'the_bridge': TheBridge(),
-        'escape_pod': EscapePod(),
+        'entrance_of_the_dungeon': Entrance(),
+        'lader_to_dungeon': Lader(),
+        'battle_with_monster': Battle(plr, mnstr),
+        'room_full_of_gold': Goldroom(),
         'death': Death(),
         'finished': Exit_of_the_dungeon(),
     }
@@ -271,6 +218,6 @@ class Map(object):
     def opening_scene(self):
         return self.next_scene(self.start_scene)
 
-a_map = Map('central_corridor')
+a_map = Map('entrance')
 a_game = Engine(a_map)
 a_game.play()
